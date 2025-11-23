@@ -6,17 +6,18 @@ A simple web-based calculator that helps you use a handheld weight scale as a ma
 
 This tool calculates the weight you need to apply on a handheld scale at a specific distance from a pivot point to achieve your desired torque.
 
-**Example:** Need to tighten a bolt to 100 Nm? With a 0.5m wrench, you'd need to apply 20.39 kg of force on your scale.
+**Example:** Need to tighten a bolt to 100 Nm? With a 50cm wrench, you'd need to apply 20.39 kg of force on your scale.
 
 ## 📐 How It Works
 
 The calculator uses the fundamental torque equation:
+
 ```
 Torque (Nm) = Force (N) × Distance (m)
 Force (N) = Mass (kg) × 9.81 (gravity)
 
 Therefore:
-Weight (kg) = Torque (Nm) ÷ (Distance (m) × 9.81)
+Weight (kg) = Torque (Nm) ÷ (Distance (cm) ÷ 100 × 9.81)
 ```
 
 ## 💡 Usage
