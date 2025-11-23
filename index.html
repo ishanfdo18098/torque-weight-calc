@@ -13,7 +13,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         function TorqueCalculator() {
             const [armLength, setArmLength] = useState('');
@@ -34,6 +34,14 @@
                     setWeight(null);
                 }
             };
+
+            useEffect(() => {
+                const timeoutId = setTimeout(() => {
+                    calculateWeight();
+                }, 500);
+
+                return () => clearTimeout(timeoutId);
+            }, [armLength, torque]);
 
             return (
                 <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -75,13 +83,6 @@
                                     placeholder="e.g., 100"
                                 />
                             </div>
-
-                            <button
-                                onClick={calculateWeight}
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
-                            >
-                                Calculate Weight
-                            </button>
 
                             {weight !== null && (
                                 <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200">

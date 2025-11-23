@@ -11,7 +11,6 @@ This tool calculates the weight you need to apply on a handheld scale at a speci
 ## 📐 How It Works
 
 The calculator uses the fundamental torque equation:
-
 ```
 Torque (Nm) = Force (N) × Distance (m)
 Force (N) = Mass (kg) × 9.81 (gravity)
@@ -24,8 +23,7 @@ Weight (kg) = Torque (Nm) ÷ (Distance (m) × 9.81)
 
 1. **Measure your arm length** - Distance from the pivot point (bolt center) to where you'll apply force
 2. **Enter the required torque** - The torque specification (usually in Newton-meters)
-3. **Click Calculate** - The app shows you the weight to apply on your scale
-4. **Apply the force** - Push down on your scale at the measured distance until it reads the calculated weight
+3. **Apply the force** - Push down on your scale at the measured distance until it reads the calculated weight
 
 ## ⚠️ Safety Notes
 
