@@ -2,6 +2,9 @@
 
 A simple web-based calculator that helps you use a handheld weight scale as a makeshift torque wrench. Perfect for situations where you need to apply a specific torque but don't have a torque wrench handy.
 
+<img width="700" height="248" alt="image" src="https://github.com/user-attachments/assets/3a3c6a89-00cc-4f01-adbd-7063a7e4004f" />
+
+
 ## 🔧 What Does It Do?
 
 This tool calculates the weight you need to apply on a handheld scale at a specific distance from a pivot point to achieve your desired torque.
