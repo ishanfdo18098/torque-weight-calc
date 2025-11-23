@@ -40,7 +40,7 @@
             useEffect(() => {
                 const timeoutId = setTimeout(() => {
                     calculateWeight();
-                }, 500);
+                }, 100);
 
                 return () => clearTimeout(timeoutId);
             }, [armLength, torque]);
