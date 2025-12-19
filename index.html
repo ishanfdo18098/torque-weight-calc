@@ -4,112 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torque to Weight Calculator</title>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            padding: 2rem;
+            max-width: 28rem;
+            width: 100%;
+        }
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .subtitle {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(90deg, #eef2ff 0%, #eff6ff 100%);
+            border-radius: 0.75rem;
+            border: 2px solid #a5b4fc;
+            display: none;
+        }
+        .result.visible {
+            display: block;
+        }
+        .result-label {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 0.25rem;
+        }
+        .result-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+        .result-hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.75rem;
+        }
+        .formula {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+        }
+        .formula p {
+            font-size: 0.75rem;
+            color: #4b5563;
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="card">
+        <h1>Torque Calculator</h1>
+        <p class="subtitle">Convert torque to weight for your handheld scale</p>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+        <div class="form-group">
+            <label for="armLength">Arm Length (centimeters)</label>
+            <input type="number" id="armLength" step="0.1" min="0" placeholder="e.g., 50">
+        </div>
 
-        function TorqueCalculator() {
-            const [armLength, setArmLength] = useState('');
-            const [torque, setTorque] = useState('');
-            const [weight, setWeight] = useState(null);
+        <div class="form-group">
+            <label for="torque">Torque Needed (Nm)</label>
+            <input type="number" id="torque" step="0.1" min="0" placeholder="e.g., 100">
+        </div>
 
-            const calculateWeight = () => {
-                const lengthCm = parseFloat(armLength);
-                const torqueValue = parseFloat(torque);
-                
-                if (lengthCm > 0 && torqueValue > 0) {
-                    // Convert cm to meters
-                    const lengthM = lengthCm / 100;
-                    // Torque (Nm) = Force (N) × Distance (m)
-                    // Force (N) = Mass (kg) × 9.81 (gravity)
-                    // Therefore: Mass (kg) = Torque (Nm) / (Distance (m) × 9.81)
-                    const weightKg = torqueValue / (lengthM * 9.81);
-                    setWeight(weightKg);
-                } else {
-                    setWeight(null);
-                }
-            };
+        <div class="result" id="result">
+            <p class="result-label">Weight Needed:</p>
+            <p class="result-value" id="weightValue">0.00 kg</p>
+            <p class="result-hint" id="resultHint">Apply this weight at 0cm from the pivot point</p>
+        </div>
 
-            useEffect(() => {
-                const timeoutId = setTimeout(() => {
-                    calculateWeight();
-                }, 500);
+        <div class="formula">
+            <p><strong>Formula:</strong> Weight (kg) = Torque (Nm) ÷ (Length (cm) ÷ 100 × 9.81)</p>
+        </div>
+    </div>
 
-                return () => clearTimeout(timeoutId);
-            }, [armLength, torque]);
+    <script>
+        const armLengthInput = document.getElementById('armLength');
+        const torqueInput = document.getElementById('torque');
+        const resultDiv = document.getElementById('result');
+        const weightValue = document.getElementById('weightValue');
+        const resultHint = document.getElementById('resultHint');
 
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-start justify-center p-4 pt-8">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-                            Torque Calculator
-                        </h1>
-                        <p className="text-gray-600 text-sm mb-6 text-center">
-                            Convert torque to weight for your handheld scale
-                        </p>
+        let timeoutId;
 
-                        <div className="space-y-5">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Arm Length (centimeters)
-                                </label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    min="0"
-                                    value={armLength}
-                                    onChange={(e) => setArmLength(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
-                                    placeholder="e.g., 50"
-                                />
-                            </div>
+        function calculateWeight() {
+            const lengthCm = parseFloat(armLengthInput.value);
+            const torqueValue = parseFloat(torqueInput.value);
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Torque Needed (Nm)
-                                </label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    min="0"
-                                    value={torque}
-                                    onChange={(e) => setTorque(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
-                                    placeholder="e.g., 100"
-                                />
-                            </div>
-
-                            {weight !== null && (
-                                <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200">
-                                    <p className="text-sm text-gray-600 mb-1">Weight Needed:</p>
-                                    <p className="text-4xl font-bold text-indigo-600">
-                                        {weight.toFixed(2)} kg
-                                    </p>
-                                    <p className="text-xs text-gray-500 mt-3">
-                                        Apply this weight at {armLength}cm from the pivot point
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                            <p className="text-xs text-gray-600">
-                                <strong>Formula:</strong> Weight (kg) = Torque (Nm) ÷ (Length (cm) ÷ 100 × 9.81)
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            );
+            if (lengthCm > 0 && torqueValue > 0) {
+                const lengthM = lengthCm / 100;
+                const weightKg = torqueValue / (lengthM * 9.81);
+                weightValue.textContent = weightKg.toFixed(2) + ' kg';
+                resultHint.textContent = 'Apply this weight at ' + lengthCm + 'cm from the pivot point';
+                resultDiv.classList.add('visible');
+            } else {
+                resultDiv.classList.remove('visible');
+            }
         }
 
-        ReactDOM.render(<TorqueCalculator />, document.getElementById('root'));
+        function debouncedCalculate() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(calculateWeight, 500);
+        }
+
+        armLengthInput.addEventListener('input', debouncedCalculate);
+        torqueInput.addEventListener('input', debouncedCalculate);
     </script>
 </body>
 </html>
